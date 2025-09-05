@@ -1,0 +1,42 @@
+db.temperature_data.aggregate([
+  {
+    $match: {
+      date: {
+        $gte: "2025-01-01",
+        $lte: "2025-06-30"
+      }
+    }
+  },
+  {
+    $group: {
+      _id: "$city",
+      avgTemp: { $avg: "$temp.avg_c" },
+      maxTemp: { $max: "$temp.max_c" },
+      minTemp: { $min: "$temp.min_c" }
+    }
+  },
+  {
+    $sort: { avgTemp: -1 }
+  },
+  {
+    $project: {
+      _id: 0,
+      city: "$_id",
+      avgTemp: { $round: ["$avgTemp", 2] },
+      maxTemp: { $round: ["$maxTemp", 2] },
+      minTemp: { $round: ["$minTemp", 2] }
+    }
+  },
+  {
+    $facet: {
+      hottest: [
+        { $sort: { avgTemp: -1 } },
+        { $limit: 1 }
+      ],
+      coldest: [
+        { $sort: { avgTemp: 1 } },
+        { $limit: 1 }
+      ]
+    }
+  }
+])

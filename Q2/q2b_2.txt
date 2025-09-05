@@ -1,0 +1,55 @@
+db.weather_data.aggregate([
+  {
+    $lookup: {
+      from: "temperature_data",
+      localField: "city",
+      foreignField: "city",
+      let: { weatherDate: "$date", weatherCity: "$city" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$date", "$$weatherDate"] },
+                { $eq: ["$city", "$$weatherCity"] }
+              ]
+            }
+          }
+        }
+      ],
+      as: "tempData"
+    }
+  },
+  {
+    $unwind: "$tempData"
+  },
+  {
+    $addFields: {
+      isRaining: {
+        $or: [
+          { $gt: ["$precip_mm", 0] },
+          { $in: ["$condition", ["Rain", "Heavy rain", "Light rain", "Drizzle", "Thunderstorm"]] }
+        ]
+      }
+    }
+  },
+  {
+    $match: {
+      date: "2025-03-15"
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      city: 1,
+      date: 1,
+      temperature: "$tempData.temp.avg_c",
+      precipitation: "$precip_mm",
+      condition: 1,
+      isRaining: 1
+    }
+  },
+  {
+    $sort: { city: 1 }
+  }
+])

@@ -1,21 +1,18 @@
-# Question 1
+# SQL Implementation
 
-Q1: Load the supplied dataset into a relational database and answer the following using SQL. (30 Marks)
+## Getting the data into the database
 
-a. Admission Funnel - An admission funnel is a stage-by-stage representation of how applicants
-progress through the selection process, showing the number who start, advance, or drop out at each
-stage until final admission. Write a single SQL query to present admission funnel of students in each
-stage of Admission and provide the average turn-around time between each stage for all students.
+created a database called Assignment_1.
+created table (masters_exam) for the data.
 
-b. Pass and Fail Rate – Write a single SQL query provide pass rate by gender (Female/Male) in each stage,
-pass rate by age band (18-20, 21-23, 24-25) in each stage, pass rate by City in each stage.
+Dowloaded the files from the source.
+Loaded each csv file through using mysql workbench.
 
-c. Write a Stored Procedure that reads StudentID as input and summarizes the student performance by
-each stage of the test with other students from the same stage with dimensions gender, city, age. For
-example, if StudentID 20162153 is provided as input, the output should return his performance in each
-stage and also illustrate what is the mean pass/fail rate of other students by gender, city, age. You are
-open choose any other measure apart from mean.
+- *Right click on the database and clicked on Table Data Import Wizard*
+- *Select the csv file and clicked on Next*
+- *Select the table and clicked on Next*
 
-Dataset can be accessed from here. Details about the dataset are available here
 
-q1a.sql
+# Assumptions
+
+In q1a.sql, Turnaround time of current stage is calculated based on the average time between itself and the previous.
